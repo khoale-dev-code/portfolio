@@ -1,40 +1,65 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Portfolio Cá Nhân - Lê Trần Đăng Khoa
 
-## Getting Started
+### Full-Stack & Mobile Developer | Chuyên gia Kiến trúc Hệ thống (ASP.NET Core, Flutter, React)
 
-First, run the development server:
+Đây là kho lưu trữ (repository) chứa mã nguồn cho Portfolio cá nhân của tôi, được xây dựng bằng Next.js và Tailwind CSS. Mục tiêu là giới thiệu các dự án, kỹ năng kỹ thuật và những lời chứng thực về khả năng lãnh đạo dự án của tôi.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Tóm tắt Dự án & Tính năng nổi bật
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Trang Portfolio này được thiết kế để trực quan hóa kinh nghiệm và thành tựu của tôi.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Tính năng | Mô tả |
+| :--- | :--- |
+| **Giao diện Responsive** | Thiết kế hoàn toàn thích ứng trên mọi thiết bị (Desktop, Mobile). |
+| **Dark/Light Mode** | Chức năng chuyển đổi chế độ tối/sáng, lưu trạng thái bằng Local Storage. |
+| **ScrollSpy Navigation** | Thanh Navbar tự động đánh dấu mục đang hoạt động (Active) khi cuộn trang. |
+| **Testimonials** | Khu vực lời chứng thực nhấn mạnh vai trò **Nhóm trưởng** và **chất lượng code/kiến trúc**. |
+| **Công nghệ hiện đại** | Tích hợp đầy đủ React Hooks, Next.js và Tailwind CSS. |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ⚙️ Công nghệ được sử dụng
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Dự án này được xây dựng trên bộ công nghệ hiện đại (MERN stack **tương đương** với việc sử dụng Next.js/React cho Frontend).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Nhóm | Công nghệ | Mục đích |
+| :--- | :--- | :--- |
+| **Frontend/Framework** | `Next.js` | Tối ưu hiệu năng, routing và Server-Side Rendering (SSR). |
+| **Styling** | `Tailwind CSS` | Utility-first CSS framework, giúp xây dựng giao diện nhanh chóng. |
+| **Icons** | `Lucide-React` | Bộ thư viện icon đơn giản, nhất quán. |
+| **Ngôn ngữ** | `TypeScript` | Tăng tính an toàn và dễ bảo trì cho mã nguồn. |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🏗️ Cấu trúc Trang & Các Phần Chính
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# portfolio
->>>>>>> 6f8ca0e166087f1d712c7497b612eb278616cbae
+Portfolio của tôi được chia thành các phần chính sau (theo thứ tự trên Navbar):
+
+1.  **Home** (`#home`): Giới thiệu bản thân và định vị vai trò.
+2.  **About me** (`#about`): Chi tiết về kỹ năng cứng (Technical Skills) và kỹ năng mềm (Soft Skills).
+3.  **Services** (`#services`): Các loại hình phát triển tôi có thể đảm nhiệm (Full-Stack, Mobile, Backend).
+4.  **My work** (`#portfolio`): Thư viện các dự án tiêu biểu (ví dụ: Hotel Booking System, Cinema App).
+5.  **Testimonials** (`#testimonials`): Đánh giá từ Giảng viên/Mentor/Đồng nghiệp về khả năng **lãnh đạo nhóm** và **chất lượng code**.
+
+---
+
+## 👨‍💻 Liên hệ & Theo dõi
+
+Tôi luôn tìm kiếm cơ hội thực tập (Intern) hoặc hợp tác phát triển các dự án mới.
+
+| Nền tảng | Liên kết |
+| :--- | :--- |
+| **🌐 GitHub Profile** | [https://github.com/khoale-dev-code](https://github.com/khoale-dev-code) |
+| **📧 Email** | `[Lekhoale30092003@gmail.com]` |
+| **📞 Số điện thoại** | `[+84 383196830]` |
+| **🔗 LinkedIn** | `[Link LinkedIn của bạn nếu có]` |
+
+---
+
+## 📝 Giấy phép (License)
+
+Dự án này được cấp phép theo Giấy phép **MIT**.
+
+© 2025 Lê Trần Đăng Khoa
