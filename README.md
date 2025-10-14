@@ -54,8 +54,7 @@ Tôi luôn tìm kiếm cơ hội thực tập (Intern) hoặc hợp tác phát t
 | **🌐 GitHub Profile** | [https://github.com/khoale-dev-code](https://github.com/khoale-dev-code) |
 | **📧 Email** | `[Lekhoale30092003@gmail.com]` |
 | **📞 Số điện thoại** | `[+84 383196830]` |
-| **🔗 LinkedIn** | `[Link LinkedIn của bạn nếu có]` |
-
+ 
 ---
 
 ## 📝 Giấy phép (License)
