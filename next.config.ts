@@ -15,5 +15,6 @@ const nextConfig = {
 };
 
 module.exports = {
-  outputFileTracingRoot: 'D:\\free\\portfolio', // Thay bằng đường dẫn gốc dự án của bạn (D:\free\portfolio)
+  outputFileTracingRoot: 'D:\\free\\portfolio',
+   // Thay bằng đường dẫn gốc dự án của bạn (D:\free\portfolio)
 };
