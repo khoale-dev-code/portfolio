@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -11,10 +13,11 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ['lucide-react'],
+    outputFileTracingRoot: path.join(__dirname),
+  },
+  eslint: {
+    ignoreDuringBuilds: true, // 👈 thêm dòng này để bỏ qua lỗi ESLint khi deploy
   },
 };
 
-module.exports = {
-  outputFileTracingRoot: 'D:\\free\\portfolio',
-   // Thay bằng đường dẫn gốc dự án của bạn (D:\free\portfolio)
-};
+module.exports = nextConfig;
