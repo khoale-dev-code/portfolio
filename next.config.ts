@@ -2,22 +2,30 @@
 const path = require('path');
 
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
-    formats: ['image/avif', 'image/webp'],
-  },
-  experimental: {
-    optimizePackageImports: ['lucide-react'],
+    // ------------------------------------
+    // 🚀 VỊ TRÍ MỚI CỦA outputFileTracingRoot
     outputFileTracingRoot: path.join(__dirname),
-  },
-  eslint: {
-    ignoreDuringBuilds: true, // 👈 thêm dòng này để bỏ qua lỗi ESLint khi deploy
-  },
+    // ------------------------------------
+    
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '**',
+            },
+        ],
+        formats: ['image/avif', 'image/webp'],
+    },
+    
+    // Khối 'experimental' chỉ giữ lại các tùy chọn thử nghiệm khác
+    experimental: {
+        optimizePackageImports: ['lucide-react'],
+        // outputFileTracingRoot đã được loại bỏ khỏi đây
+    },
+    
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 };
 
 module.exports = nextConfig;
