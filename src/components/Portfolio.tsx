@@ -1,438 +1,587 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { 
-  ArrowUpRight, 
-  ExternalLink, 
-  Github, 
-  Calendar, 
-  Zap,
-  Star,
-  TrendingUp,
-  Award,
-  Code,
-  Sparkles,
-  Filter,
-  Eye,
-  Users,
-  Clock,
+import { useState, useMemo, useRef } from 'react';
+import { motion, AnimatePresence, Variants, useScroll, useTransform } from 'framer-motion';
+import {
+  ArrowUpRight,
+  ExternalLink,
+  Github,
+  Calendar,
   CheckCircle,
-  Layers
+  Layers,
+  Play,
+  ChevronRight,
+  Code2,
+  Smartphone,
+  Server,
+  Sparkles,
+  TrendingUp,
+  Star
 } from 'lucide-react';
-import Image from 'next/image';
-import { workData } from '@/data/assets';
+
+interface WorkItem {
+  title: string;
+  description: string;
+  category: 'web' | 'mobile' | 'full-stack';
+  tech: string[];
+  liveLink?: string;
+  githubLink?: string;
+  youtubeLink?: string;
+  date: string;
+  status: 'Live' | 'In Progress' | 'Production' | 'Completed';
+  highlights: string[];
+}
+
+interface Category {
+  id: 'all' | 'web' | 'mobile' | 'full-stack';
+  name: string;
+  count: number;
+  icon: React.ElementType;
+}
+
+const BRAND_COLOR = '#677a1c';
+const BRAND_HOVER_COLOR = '#4a5b14';
+
+const workData: WorkItem[] = [
+  {
+    title: 'HUFLIT Test Practice',
+    description: 'Nền tảng luyện thi Chuẩn Đầu Ra',
+    category: 'web',
+    tech: ['React 18', 'Firebase', 'Clerk Auth', 'Tailwind CSS', 'Vite'],
+    liveLink: 'https://huflit-test.vercel.app',
+    githubLink: 'https://github.com/khoale-dev-code/huflit-test',
+    date: '10/2025 - 12/2025',
+    status: 'Live',
+    highlights: [
+      '700+ người dùng hoạt động (KPI quan trọng)',
+      'Text-to-Speech API với giọng nam/nữ',
+      'Lighthouse Score 95+, Load time <1.5s'
+    ]
+  },
+  {
+    title: 'Hotel Booking System',
+    description: 'Full-Stack Web Application',
+    category: 'full-stack',
+    tech: ['Flutter Web', 'ASP.NET Core 8.0', 'SQL Server', 'JWT', 'Entity Framework'],
+    githubLink: 'https://github.com/khoale-dev-code/Hotel-Booking-Frontend',
+    date: '2025 - Đang phát triển',
+    status: 'In Progress',
+    highlights: [
+      'Frontend responsive với Flutter Web',
+      'Backend API an toàn với ASP.NET Core 8.0',
+      'Hỗ trợ multi-role authentication'
+    ]
+  },
+  {
+    title: 'Cinema Ticket Booking',
+    description: 'Hệ Thống Đặt Vé Xem Phim',
+    category: 'web',
+    tech: ['React.js', 'Tailwind CSS', 'Vite', 'React Query', 'YouTube API'],
+    liveLink: 'https://cinemakhoale.vercel.app',
+    githubLink: 'https://github.com/khoale-dev-code/Cinema',
+    date: '06/2025 - 08/2025',
+    status: 'Live',
+    highlights: [
+      'Giao diện responsive đẹp mắt (Mobile First)',
+      'YouTube API integration cho trailer',
+      'Hệ thống chọn ghế interactive (UX focus)'
+    ]
+  },
+  {
+    title: 'SHAKE-Cafe App',
+    description: 'Ứng Dụng Đặt Cà Phê',
+    category: 'mobile',
+    tech: ['Flutter', 'Dart', 'Firebase'],
+    githubLink: 'https://github.com/khoale-dev-code/App-coffe-demo',
+    date: '06/2024 - 07/2024',
+    status: 'Completed',
+    highlights: [
+      'Cross-platform coffee ordering app (Native Feel)',
+      'Firebase Backend integration',
+      'Trải nghiệm người dùng mượt mà'
+    ]
+  },
+  {
+    title: 'Moc Khang Management',
+    description: 'Ứng Dụng Quản Lý Bán Hàng',
+    category: 'mobile',
+    tech: ['Flutter', 'Dart', 'Firebase'],
+    githubLink: 'https://github.com/khoale-dev-code/MocKhang_App',
+    youtubeLink: 'https://www.youtube.com/watch?v=NrEKbp99000',
+    date: '03/2025 - 04/2025',
+    status: 'Completed',
+    highlights: [
+      'Ứng dụng quản lý bán hàng realtime',
+      'Kết nối backend realtime (Firestore)',
+      'Tính năng quản lý kho hàng'
+    ]
+  },
+  {
+    title: 'Grid Stylish E-Commerce',
+    description: 'Dự Án Thực Tập - GIS Việt',
+    category: 'full-stack',
+    tech: ['Flutter', 'ASP.NET Core', 'SQL Server', 'Firebase', 'Figma'],
+    date: '09/2024 - 11/2024',
+    status: 'Production',
+    highlights: [
+      'Frontend: Flutter (UI responsive, cart, checkout)',
+      'Backend: ASP.NET Core APIs (Microservices concept)',
+      'JWT auth & role-based access control'
+    ]
+  }
+];
+
+const categories: Category[] = [
+  { id: 'all', name: 'Tất Cả Dự Án', count: workData.length, icon: Layers },
+  { id: 'web', name: 'Web Apps', count: workData.filter(w => w.category === 'web').length, icon: Code2 },
+  { id: 'mobile', name: 'Mobile Apps', count: workData.filter(w => w.category === 'mobile').length, icon: Smartphone },
+  { id: 'full-stack', name: 'Full Stack', count: workData.filter(w => w.category === 'full-stack').length, icon: Server }
+];
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { y: 30, opacity: 0, scale: 0.95 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    scale: 1,
+    transition: { type: 'spring', stiffness: 100, damping: 15 }
+  },
+};
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'Live': return 'bg-emerald-100 text-emerald-700 border-emerald-300 shadow-lg shadow-emerald-100';
+    case 'In Progress': return 'bg-amber-100 text-amber-700 border-amber-300 shadow-lg shadow-amber-100';
+    case 'Production': return 'bg-blue-100 text-blue-700 border-blue-300 shadow-lg shadow-blue-100';
+    default: return 'bg-gray-100 text-gray-600 border-gray-200';
+  }
+};
+
+const getCategoryGradient = (category: string) => {
+  switch (category) {
+    case 'web': return 'from-blue-500 to-cyan-500';
+    case 'mobile': return 'from-purple-500 to-pink-500';
+    case 'full-stack': return 'from-orange-500 to-red-500';
+    default: return 'from-gray-400 to-gray-500';
+  }
+};
 
 export default function Portfolio() {
-  const [visibleItems, setVisibleItems] = useState(4);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'web' | 'mobile' | 'full-stack'>('all');
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  const { scrollYProgress } = useScroll();
+  const yHeader = useTransform(scrollYProgress, [0, 0.3], [0, -60]);
+  const yBackground = useTransform(scrollYProgress, [0, 1], [0, 200]);
 
-  const categories = [
-    { id: 'all', name: 'All Projects', icon: Layers, count: workData.length },
-    { id: 'web', name: 'Web Apps', icon: Code, count: workData.filter(w => w.description.includes('Web')).length },
-    { id: 'mobile', name: 'Mobile Apps', icon: Zap, count: workData.filter(w => w.description.includes('Mobile')).length },
-    { id: 'backend', name: 'Backend', icon: Award, count: workData.filter(w => w.description.includes('Backend')).length }
-  ];
+  const filteredWork = useMemo(() => {
+    return workData.filter(work =>
+      selectedCategory === 'all' || work.category === selectedCategory
+    );
+  }, [selectedCategory]);
 
-  const filteredWork = workData.filter(work => {
-    if (selectedCategory === 'all') return true;
-    if (selectedCategory === 'web') return work.description.includes('Web');
-    if (selectedCategory === 'mobile') return work.description.includes('Mobile');
-    if (selectedCategory === 'backend') return work.description.includes('Backend');
-    return true;
-  });
 
-  const handleShowMore = () => {
-    setVisibleItems((prev) => Math.min(prev + 4, filteredWork.length));
-  };
-
-  const handleCardClick = (link: string | undefined) => {
-    if (link) {
-      window.open(link, '_blank', 'noopener,noreferrer');
-    }
-  };
-
-  // Portfolio statistics
-  const stats = [
-    { 
-      icon: Award, 
-      value: '6+', 
-      label: 'Projects Completed',
-      color: 'from-[#677a1c] to-[#92a344]'
-    },
-    { 
-      icon: Users, 
-      value: '500+', 
-      label: 'Users Supported',
-      color: 'from-[#92a344] to-[#a5b95b]'
-    },
-    { 
-      icon: Clock, 
-      value: '500+', 
-      label: 'Hours Coded',
-      color: 'from-[#4f6016] to-[#677a1c]'
-    },
-    { 
-      icon: Star, 
-      value: '100%', 
-      label: 'Success Rate',
-      color: 'from-[#677a1c] to-[#4f6016]'
-    }
-  ];
 
   return (
-    <section 
-      id="portfolio" 
-      className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-[#fdf9f3] via-[#f5f1e8] to-[#e8e4c7] dark:from-[#11001e] dark:via-[#1a0028] dark:to-[#0a0015]"
+    <section
+      id="portfolio"
+      className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 50%, #f3f4f6 100%)',
+        fontFamily: 'Inter, sans-serif'
+      }}
+      ref={containerRef}
     >
-      {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        {/* Floating gradient orbs */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#92a344]/30 to-[#677a1c]/20 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#e8e4c7]/40 to-[#92a344]/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-gradient-to-r from-[#677a1c]/10 to-[#92a344]/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '3s' }} />
-        
-        {/* Animated grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:48px_48px]" />
-        
-        {/* Spotlight effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-[#677a1c]/5 to-transparent blur-2xl" />
-      </div>
+      {/* Animated Background Elements */}
+      <motion.div
+        style={{ y: yBackground }}
+        className="absolute inset-0 z-0 pointer-events-none"
+      >
+        <div className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-green-300/20 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-tr from-blue-300/20 to-transparent rounded-full blur-3xl"></div>
+      </motion.div>
+
+      {/* Grid Pattern */}
+      <motion.div
+        style={{ y: yBackground, opacity: 0.5 }}
+        className="absolute inset-0 z-0 pointer-events-none"
+        initial={{ opacity: 0.3 }}
+        animate={{ opacity: 0.5 }}
+      >
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(107, 114, 128, .1) 1px, transparent 1px), linear-gradient(90deg, rgba(107, 114, 128, .1) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        ></div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Hero Header */}
-        <div className={`text-center mb-20 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        {/* Header Section */}
+        <motion.div
+          style={{ y: yHeader }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center mb-20"
+        >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-white/80 to-[#e8e4c7]/80 dark:from-[#677a1c]/40 dark:to-[#4f6016]/40 border-2 border-[#92a344] dark:border-[#677a1c]/50 mb-8 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-            <Sparkles size={18} className="text-[#677a1c] dark:text-[#a5b95b] animate-pulse" />
-            <span className="text-[#677a1c] dark:text-[#a5b95b] text-sm font-bold tracking-wider uppercase">Portfolio Showcase</span>
-            <Sparkles size={18} className="text-[#677a1c] dark:text-[#a5b95b] animate-pulse" />
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 mb-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
+          >
+            <motion.div animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }}>
+              <Sparkles size={16} style={{ color: BRAND_COLOR }} />
+            </motion.div>
+            <span className="text-sm font-bold" style={{ color: BRAND_COLOR }}>DỰ ÁN TIÊU BIỂU</span>
+          </motion.div>
 
           {/* Main Title */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-8 leading-tight">
-            <span className="bg-gradient-to-r from-[#4f6016] via-[#677a1c] to-[#92a344] dark:from-[#a5b95b] dark:via-[#c4d47d] dark:to-[#99aa44] bg-clip-text text-transparent">
-              Featured
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-[#677a1c] via-[#92a344] to-[#677a1c] dark:from-[#c4d47d] dark:via-[#a5b95b] dark:to-[#c4d47d] bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-              Projects
-            </span>
-          </h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 text-gray-900 leading-tight tracking-tight"
+          >
+            Các Dự Án <br />
+            <motion.span
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="relative inline-block"
+              style={{ color: BRAND_COLOR }}
+            >
+              Nổi Bật
+              <motion.div
+                className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-green-400 to-emerald-600"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
+                style={{ originX: 0 }}
+              ></motion.div>
+            </motion.span>
+          </motion.h1>
 
-          {/* Description */}
-          <p className="text-gray-700 dark:text-gray-300 text-lg sm:text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed font-medium mb-12">
-            Explore my collection of 
-            <span className="font-bold text-[#677a1c] dark:text-[#a5b95b]"> 6+ innovative projects</span> showcasing
-            <br className="hidden sm:block" />
-            full-stack expertise with 
-            <span className="font-bold text-[#677a1c] dark:text-[#a5b95b]"> Flutter</span>, 
-            <span className="font-bold text-[#677a1c] dark:text-[#a5b95b]"> React.js</span>, and 
-            <span className="font-bold text-[#677a1c] dark:text-[#a5b95b]"> ASP.NET Core</span>
-          </p>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            {stats.map((stat, index) => {
+          {/* Stats Grid */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 max-w-4xl mx-auto"
+          >
+            {[
+              { number: '6+', label: 'Dự Án Lớn', icon: TrendingUp },
+              { number: '700+', label: 'Người Dùng Thực', icon: Star },
+              { number: '95+', label: 'Lighthouse Score', icon: Sparkles }
+            ].map((stat, idx) => {
               const Icon = stat.icon;
               return (
-                <div 
-                  key={index}
-                  className="group relative p-6 rounded-2xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-[#677a1c] dark:hover:border-[#a5b95b] transition-all duration-500 hover:scale-105 hover:shadow-2xl overflow-hidden"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                <motion.div
+                  key={idx}
+                  variants={itemVariants}
+                  whileHover={{ y: -5, boxShadow: `0 20px 25px -5px rgba(107, 122, 28, 0.15)` }}
+                  className="relative group p-6 sm:p-8 bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden"
                 >
-                  {/* Gradient background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                  
-                  <Icon className="w-8 h-8 mx-auto mb-3 text-[#677a1c] dark:text-[#a5b95b] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500" />
-                  <div className="text-3xl sm:text-4xl font-bold text-[#677a1c] dark:text-[#a5b95b] mb-1">
-                    {stat.value}
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative z-10">
+                    <Icon size={24} style={{ color: BRAND_COLOR }} className="mb-3 mx-auto" />
+                    <div className="text-4xl sm:text-5xl font-black mb-2" style={{ color: BRAND_COLOR }}>
+                      {stat.number}
+                    </div>
+                    <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
                   </div>
-                  <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
-                    {stat.label}
-                  </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Enhanced Category Filter */}
-        <div className="mb-16">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <Filter size={20} className="text-[#677a1c] dark:text-[#a5b95b]" />
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Filter Projects</h3>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-4">
+        {/* Filter Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="mb-16"
+        >
+          <div className="flex flex-wrap justify-center gap-3">
             {categories.map((category) => {
+              const isActive = selectedCategory === category.id;
               const Icon = category.icon;
               return (
-                <button
+                <motion.button
                   key={category.id}
                   onClick={() => {
                     setSelectedCategory(category.id);
-                    setVisibleItems(4);
                   }}
-                  className={`group relative flex items-center gap-3 px-6 py-3.5 rounded-2xl font-bold text-sm transition-all duration-500 overflow-hidden ${
-                    selectedCategory === category.id
-                      ? 'bg-gradient-to-r from-[#677a1c] to-[#92a344] text-white shadow-2xl scale-105'
-                      : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 border-2 border-gray-200 dark:border-gray-700 hover:border-[#677a1c] dark:hover:border-[#a5b95b] backdrop-blur-sm hover:scale-105 hover:shadow-xl'
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 overflow-hidden group ${
+                    isActive
+                      ? 'text-white shadow-2xl'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300 shadow-md'
                   }`}
+                  style={{
+                    backgroundColor: isActive ? BRAND_COLOR : undefined,
+                  }}
                 >
-                  {/* Animated background for inactive state */}
-                  {selectedCategory !== category.id && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#677a1c]/0 to-[#92a344]/0 group-hover:from-[#677a1c]/10 group-hover:to-[#92a344]/10 transition-all duration-500" />
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute inset-0 rounded-xl"
+                      style={{ background: `linear-gradient(135deg, ${BRAND_COLOR}dd, ${BRAND_HOVER_COLOR}dd)` }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    />
                   )}
-                  
-                  <Icon size={18} className={selectedCategory === category.id ? 'animate-pulse' : 'group-hover:scale-110 transition-transform duration-300'} />
+                  <Icon size={16} className="relative z-10" />
                   <span className="relative z-10">{category.name}</span>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                    selectedCategory === category.id
-                      ? 'bg-white/20'
-                      : 'bg-[#677a1c]/10 dark:bg-[#a5b95b]/10 text-[#677a1c] dark:text-[#a5b95b]'
-                  }`}>
-                    {category.count}
-                  </span>
-                </button>
+                  <motion.span
+                    className={`ml-1 text-xs font-bold relative z-10 ${isActive ? 'text-white/90' : 'text-gray-500'}`}
+                    initial={false}
+                    animate={{ scale: isActive ? 1.1 : 1 }}
+                  >
+                    ({category.count})
+                  </motion.span>
+                </motion.button>
               );
             })}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Premium Portfolio Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-          {filteredWork.slice(0, visibleItems).map((work, index) => (
-            <div
-              key={index}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => handleCardClick(work.link)}
-              className="group relative rounded-3xl overflow-hidden transition-all duration-700 hover:-translate-y-3 cursor-pointer"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              {/* Glass morphism container */}
-              <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-2 border-gray-200/50 dark:border-gray-700/50 rounded-3xl overflow-hidden shadow-xl group-hover:shadow-2xl group-hover:border-[#677a1c] dark:group-hover:border-[#a5b95b] transition-all duration-700">
-                
-                {/* Image Container with Enhanced Effects */}
-                <div className="relative h-80 overflow-hidden">
-                  {/* Image */}
-                  <Image
-                    src={work.bgImage}
-                    alt={work.title}
-                    fill
-                    className="object-cover transition-all duration-1000 group-hover:scale-110 group-hover:rotate-2"
-                  />
-                  
-                  {/* Multi-layer gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#677a1c]/20 via-transparent to-[#92a344]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  
-                  {/* Animated shine effect */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500" />
-                  </div>
+        {/* Portfolio Grid */}
+        <motion.div
+          key={selectedCategory}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredWork.map((work) => (
+              <motion.div
+                key={work.title}
+                variants={itemVariants}
+                layout
+                exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                className="group h-full"
+              >
+                <motion.div
+                  whileHover={{ y: -12 }}
+                  className="h-full flex flex-col bg-white rounded-3xl border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden relative"
+                >
+                  {/* Image Section */}
+                  <div className="relative h-64 sm:h-72 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                    {/* Gradient Overlay */}
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br opacity-30 group-hover:opacity-50 transition-opacity duration-500 ${getCategoryGradient(work.category)}`}
+                    ></div>
 
-                  {/* Top Bar - Date & Links */}
-                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-20">
-                    {/* Date Badge */}
-                    {work.date && (
-                      <div className="flex items-center gap-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <Calendar size={16} className="text-[#677a1c] dark:text-[#a5b95b]" />
-                        <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{work.date}</span>
+                    {/* Icon Animation */}
+                    <motion.div
+                      className="absolute inset-0 flex items-center justify-center"
+                      whileHover={{ scale: 1.15, rotate: 10 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <div className="text-8xl opacity-40 group-hover:opacity-60 transition-opacity">
+                        {work.category === 'web' ? '🌐' : work.category === 'mobile' ? '📱' : '⚙️'}
                       </div>
-                    )}
+                    </motion.div>
 
-                    {/* Action Links */}
-                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
-                      {work.link && (
-                        <a
-                          href={work.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md hover:bg-[#677a1c] hover:scale-110 transition-all duration-300 shadow-lg border border-gray-200/50 dark:border-gray-700/50 group/link"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <ExternalLink size={18} className="text-gray-700 dark:text-gray-300 group-hover/link:text-white transition-colors" />
-                        </a>
-                      )}
-                      {work.link && work.link.includes('github') && (
-                        <a
-                          href={work.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md hover:bg-[#92a344] hover:scale-110 transition-all duration-300 shadow-lg border border-gray-200/50 dark:border-gray-700/50 group/link"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Github size={18} className="text-gray-700 dark:text-gray-300 group-hover/link:text-white transition-colors" />
-                        </a>
-                      )}
+                    {/* Top Badges */}
+                    <div className="absolute top-5 left-5 right-5 flex items-center justify-between gap-3 z-20">
+                      <motion.div
+                        initial={{ opacity: 0, x: -15 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4 }}
+                        className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-2 rounded-lg text-xs font-bold text-gray-700 border border-gray-200/50 shadow-lg"
+                      >
+                        <Calendar size={14} className="text-gray-500" />
+                        {work.date}
+                      </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold border shadow-lg ${getStatusColor(work.status)}`}
+                      >
+                        {work.status}
+                      </motion.div>
                     </div>
+
+                    {/* Description */}
+                    <motion.div
+                      className="absolute bottom-5 left-5 right-5 z-20"
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                    >
+                      <div className="bg-white/98 backdrop-blur-sm text-gray-900 px-4 py-3 rounded-xl text-sm font-bold shadow-2xl border border-gray-100/50">
+                        {work.description}
+                      </div>
+                    </motion.div>
                   </div>
 
-                  {/* Bottom Badge - Category */}
-                  <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end z-20">
-                    <div className="bg-gradient-to-r from-[#677a1c] to-[#92a344] text-white px-4 py-2 rounded-full text-sm font-bold shadow-xl backdrop-blur-sm">
-                      {work.description}
-                    </div>
-                    
-                    {/* View indicator */}
-                    <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <Eye size={14} className="text-white" />
-                      <span className="text-xs font-bold text-white">View</span>
-                    </div>
-                  </div>
-                </div>
+                  {/* Content Section */}
+                  <div className="flex-1 p-7 sm:p-8 flex flex-col">
+                    <motion.h3
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      className="text-2xl sm:text-3xl font-black text-gray-900 mb-5"
+                    >
+                      {work.title}
+                    </motion.h3>
 
-                {/* Content Section */}
-                <div className="p-6 sm:p-8">
-                  {/* Title */}
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-[#677a1c] dark:group-hover:text-[#a5b95b] transition-colors duration-300">
-                    {work.title}
-                  </h3>
-
-                  {/* Tech Stack Tags */}
-                  {work.tech && (
-                    <div className="flex flex-wrap gap-2 mb-5">
-                      {work.tech.map((tech, idx) => (
-                        <span
+                    {/* Tech Stack */}
+                    <div className="flex flex-wrap gap-2.5 mb-6">
+                      {work.tech.slice(0, 4).map((tech, idx) => (
+                        <motion.span
                           key={idx}
-                          className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:scale-110 transition-transform duration-300 border border-gray-200 dark:border-gray-600"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          whileHover={{ scale: 1.15, y: -2 }}
+                          transition={{ delay: idx * 0.05 }}
+                          viewport={{ once: true }}
+                          className="px-3.5 py-1.5 text-xs font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-gray-700 rounded-full border transition-all duration-200 cursor-default shadow-sm hover:shadow-md"
+                          style={{ borderColor: BRAND_COLOR + '40', color: BRAND_COLOR }}
                         >
                           {tech}
-                        </span>
+                        </motion.span>
                       ))}
                     </div>
-                  )}
 
-                  {/* Key Highlights */}
-                  {work.highlights && (
-                    <div className="space-y-3 mb-6">
-                      {work.highlights.slice(0, 3).map((highlight, idx) => (
-                        <div 
-                          key={idx} 
-                          className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-[#677a1c]/5 to-[#92a344]/5 hover:from-[#677a1c]/10 hover:to-[#92a344]/10 transition-all duration-300"
+                    {/* Highlights */}
+                    <div className="space-y-3.5 mb-7 flex-1">
+                      {work.highlights.map((highlight, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.08 }}
+                          viewport={{ once: true }}
+                          className="flex items-start gap-3"
                         >
-                          <CheckCircle size={18} className="text-[#677a1c] dark:text-[#a5b95b] flex-shrink-0 mt-0.5" />
-                          <p className="text-sm text-gray-700 dark:text-gray-300 font-medium leading-relaxed">
+                          <motion.div
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: idx * 0.3 }}
+                          >
+                            <CheckCircle size={18} style={{ color: BRAND_COLOR }} className="flex-shrink-0 mt-0.5" />
+                          </motion.div>
+                          <p className="text-sm text-gray-600 leading-relaxed">
                             {highlight}
                           </p>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
-                  )}
 
-                  {/* Action Footer */}
-                  <div className="flex items-center justify-between pt-6 border-t-2 border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-[#677a1c] dark:bg-[#a5b95b] animate-pulse" />
-                      <span className="text-sm font-bold text-gray-600 dark:text-gray-400">
-                        Click to explore
-                      </span>
-                    </div>
-                    
-                    {/* Animated Arrow Button */}
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#677a1c] to-[#92a344] rounded-full blur-xl opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
-                      <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-[#677a1c] to-[#92a344] flex items-center justify-center shadow-xl group-hover:shadow-2xl group-hover:scale-125 group-hover:rotate-45 transition-all duration-500">
-                        <ArrowUpRight size={20} className="text-white" />
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-3 pt-6 border-t border-gray-100">
+                      <div className="flex gap-2">
+                        {[
+                          { link: work.liveLink, icon: ExternalLink, title: "Truy cập trang live" },
+                          { link: work.githubLink, icon: Github, title: "Xem GitHub" },
+                          { link: work.youtubeLink, icon: Play, title: "Xem demo" },
+                        ].map((item, idx) => item.link && (
+                          <motion.a
+                            key={idx}
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.15, y: -3 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-gray-50 to-gray-100 text-gray-700 shadow-md hover:shadow-lg border border-gray-200 transition-all duration-200"
+                            title={item.title}
+                          >
+                            <item.icon size={18} />
+                          </motion.a>
+                        ))}
                       </div>
+
+                      <motion.a
+                        href="#"
+                        whileHover={{ scale: 1.12, rotate: 8 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="ml-auto w-13 h-13 flex items-center justify-center rounded-full text-white shadow-xl transition-all duration-300 hover:shadow-2xl"
+                        style={{ backgroundColor: BRAND_COLOR }}
+                      >
+                        <ArrowUpRight size={20} />
+                      </motion.a>
                     </div>
                   </div>
-                </div>
+                </motion.div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
-                {/* Hover glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#677a1c]/0 via-[#92a344]/0 to-[#677a1c]/0 group-hover:from-[#677a1c]/5 group-hover:via-[#92a344]/5 group-hover:to-[#677a1c]/5 rounded-3xl transition-all duration-700 pointer-events-none" />
-              </div>
-            </div>
-          ))}
-        </div>
 
-        {/* Enhanced Show More Button */}
-        {visibleItems < filteredWork.length && (
-          <div className="flex justify-center mb-16">
-            <button
-              onClick={handleShowMore}
-              className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-[#677a1c] to-[#92a344] text-white font-bold shadow-2xl shadow-[#677a1c]/30 hover:shadow-[#677a1c]/50 transition-all duration-500 hover:scale-110 overflow-hidden"
-            >
-              {/* Animated background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#92a344] to-[#677a1c] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              {/* Shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              
-              <span className="relative z-10">Load More Projects</span>
-              <TrendingUp size={20} className="relative z-10 group-hover:translate-y-0.5 group-hover:scale-125 transition-all duration-300" />
-            </button>
-          </div>
-        )}
 
-        {/* No Results State */}
-        {filteredWork.length === 0 && (
-          <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-[#677a1c]/20 to-[#92a344]/20 mb-6">
-              <Filter size={32} className="text-[#677a1c] dark:text-[#a5b95b]" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-              No Projects Found
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              Try selecting a different category filter
-            </p>
-          </div>
-        )}
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.7 }}
+        >
+          <div className="relative overflow-hidden rounded-3xl border border-gray-100 p-12 sm:p-16 shadow-xl bg-gradient-to-br from-white via-green-50/30 to-white">
+            {/* Decorative Blobs */}
+            <div className="absolute -top-20 -right-20 w-80 h-80 bg-green-200/20 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-200/20 rounded-full blur-3xl"></div>
 
-        {/* Bottom CTA Section */}
-        <div className="relative mt-20">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#677a1c] via-[#92a344] to-[#677a1c] rounded-3xl blur-3xl opacity-20 animate-pulse-slow" />
-          
-          <div className="relative p-12 rounded-3xl bg-gradient-to-br from-white/90 to-[#e8e4c7]/50 dark:from-gray-800/90 dark:to-gray-900/50 backdrop-blur-xl border-2 border-[#677a1c]/30 dark:border-[#a5b95b]/30 text-center overflow-hidden">
-            {/* Decorative elements */}
-            <div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-[#677a1c]/20 to-transparent rounded-full blur-2xl" />
-            <div className="absolute bottom-0 right-0 w-40 h-40 bg-gradient-to-tl from-[#92a344]/20 to-transparent rounded-full blur-2xl" />
+            <div className="relative z-10 text-center">
+              <motion.h3
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-3xl sm:text-4xl font-black text-gray-900 mb-5"
+              >
+                Thấy được điều bạn muốn?
+              </motion.h3>
 
-            <div className="relative z-10">
-              <Sparkles className="w-12 h-12 mx-auto mb-6 text-[#677a1c] dark:text-[#a5b95b] animate-pulse" />
-              
-              <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Like What You See?
-              </h3>
-              
-              <p className="text-gray-700 dark:text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-                Let's discuss how I can help bring your next project to life with the same level of quality and dedication
-              </p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="text-gray-600 text-lg mb-10 max-w-2xl mx-auto leading-relaxed"
+              >
+                Hãy liên hệ với tôi để thảo luận về dự án tiếp theo. Tôi sẵn sàng cho những thử thách mới.
+              </motion.p>
 
-              <a href="#contact">
-                <button className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-[#677a1c] to-[#92a344] text-white font-bold shadow-2xl hover:shadow-[#677a1c]/50 transition-all duration-500 hover:scale-110 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#92a344] to-[#677a1c] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <span className="relative z-10">Let's Work Together</span>
-                  <ArrowUpRight size={20} className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-                </button>
-              </a>
+              <motion.a
+                href="#contact"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="inline-block"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.08, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center gap-2 px-10 py-4 text-white font-bold rounded-xl shadow-2xl transition-all duration-300"
+                  style={{ backgroundColor: BRAND_HOVER_COLOR }}
+                >
+                  Cùng Làm Việc Ngay
+                  <ArrowUpRight size={20} />
+                </motion.button>
+              </motion.a>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-
-      {/* Custom animations */}
-      <style jsx>{`
-        @keyframes gradient {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-        .animate-gradient {
-          animation: gradient 3s ease infinite;
-        }
-      `}</style>
     </section>
   );
 }

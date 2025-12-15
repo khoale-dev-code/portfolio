@@ -1,23 +1,39 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { assets } from '@/data/assets';
-import { ArrowRight, Download, Github, Mail, Linkedin, FileText, Code2, Sparkles } from 'lucide-react';
+import { ArrowRight, Download, Github, Mail, Linkedin, Sparkles, Code2, Zap, Rocket } from 'lucide-react';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import user_image from '../public/assets/user-image.png';
+
+const BRAND_COLOR = '#677a1c';
+const BRAND_HOVER_COLOR = '#4a5b14';
 
 export default function Hero() {
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownloadCV = () => {
-    setIsDownloading(true);
-    // Simulate download - Replace with your actual CV file path
-    const link = document.createElement('a');
-    link.href = '/cv/Khoa_Le_CV.pdf'; // Đặt file CV vào folder public/cv/
-    link.download = 'Khoa_Le_Full_Stack_Developer_CV.pdf';
-    link.click();
-    
-    setTimeout(() => setIsDownloading(false), 2000);
+  const handleDownloadCV = async () => {
+    try {
+      setIsDownloading(true);
+      const response = await fetch('/cv.pdf');
+      if (!response.ok) throw new Error('Failed to download CV');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Lê_Trần_Đăng_Khoa_CV.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      setTimeout(() => setIsDownloading(false), 1500);
+    } catch (error) {
+      console.error('Download error:', error);
+      setIsDownloading(false);
+      alert('Không thể tải CV. Vui lòng thử lại!');
+    }
   };
 
   const socialLinks = [
@@ -35,252 +51,427 @@ export default function Hero() {
     },
     { 
       icon: Linkedin, 
-      href: 'https://linkedin.com/in/your-profile', 
+      href: 'https://linkedin.com/in/khoale-dev', 
       label: 'LinkedIn',
       color: 'hover:bg-blue-600 hover:text-white'
     }
   ];
 
   const stats = [
-    { value: '6+', label: 'Projects' },
-    { value: '0.5+', label: 'Years' },
-    { value: '10+', label: 'Technologies' }
+    { value: '6+', label: 'Dự Án Hoàn Thành', icon: '🎯' },
+    { value: '1+', label: 'Năm Kinh Nghiệm', icon: '⚡' },
+    { value: '10+', label: 'Công Nghệ', icon: '🔧' }
   ];
+
+  const techStack = ['React.js', 'Flutter', 'ASP.NET', 'Firebase'];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.12, delayChildren: 0.2 },
+    },
+  };
+
+  const itemVariants: any = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 100, damping: 15 }
+    },
+  };
 
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 overflow-hidden bg-[#fdf9f3] dark:bg-[#11001e] transition-colors duration-300"
+      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 50%, #f3f4f6 100%)',
+        fontFamily: 'Inter, sans-serif'
+      }}
     >
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#677a1c]/10 dark:bg-[#f1e0bf]/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#92a344]/10 dark:bg-[#677a1c]/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-[#677a1c]/5 to-[#92a344]/5 dark:from-[#f1e0bf]/3 dark:to-[#677a1c]/3 rounded-full blur-3xl"></div>
-      </div>
+      {/* Animated Background Blobs */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+      >
+        <motion.div
+          animate={{ x: [0, 20, -20, 0], y: [0, -20, 20, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-green-300/20 to-transparent rounded-full blur-3xl"
+        ></motion.div>
+        
+        <motion.div
+          animate={{ x: [0, -20, 20, 0], y: [0, 20, -20, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute -bottom-40 -right-40 w-96 h-96 bg-gradient-to-tl from-blue-300/20 to-transparent rounded-full blur-3xl"
+        ></motion.div>
+        
+        <motion.div
+          animate={{ scale: [1, 1.1, 0.95, 1], opacity: [0.3, 0.5, 0.3, 0.3] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-green-300/20 to-blue-300/20 rounded-full blur-3xl"
+        ></motion.div>
 
-      <div className="max-w-5xl mx-auto w-full relative z-10">
-        <div className="text-center space-y-8">
-          {/* Profile Image with Decorative Ring */}
-          <div className="mb-8 flex justify-center animate-fade-in">
-            <div className="relative group">
-              {/* Outer decorative rings */}
-              <div className="absolute inset-0 -m-4 bg-gradient-to-r from-[#677a1c] to-[#92a344] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-              <div className="absolute inset-0 -m-2 bg-gradient-to-r from-[#677a1c] to-[#92a344] rounded-full animate-spin-slow opacity-20"></div>
-              
+        {/* Grid Pattern */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'linear-gradient(rgba(107, 114, 128, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(107, 114, 128, .08) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          opacity: 0.5
+        }}></div>
+      </motion.div>
+
+      <div className="max-w-6xl mx-auto w-full relative z-10">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="text-center space-y-8"
+        >
+          
+          {/* Badge - Available */}
+          <motion.div variants={itemVariants} className="inline-block">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-lg border shadow-lg"
+              style={{
+                background: `linear-gradient(135deg, ${BRAND_COLOR}10, #92a34410)`,
+                borderColor: `${BRAND_COLOR}40`
+              }}
+            >
+              <motion.span
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-2 h-2 bg-green-500 rounded-full"
+              ></motion.span>
+              <span className="text-sm font-bold" style={{ color: BRAND_COLOR }}>
+                Sẵn sàng cho các cơ hội mới
+              </span>
+            </motion.div>
+          </motion.div>
+
+          {/* Profile Image with Advanced Animations */}
+          <motion.div variants={itemVariants} className="flex justify-center">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="relative group"
+            >
+              {/* Animated Gradient Ring */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 -m-2 rounded-full p-[3px] group-hover:animate-pulse"
+                style={{
+                  background: `linear-gradient(to right, ${BRAND_COLOR}, #92a344, ${BRAND_COLOR})`,
+                  backgroundSize: '200% 200%'
+                }}
+              >
+                <div className="w-full h-full rounded-full bg-white dark:bg-gray-900"></div>
+              </motion.div>
+
+              {/* Outer Glow */}
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute inset-0 -m-4 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: `linear-gradient(to right, ${BRAND_COLOR}/30, #92a344/30)`
+                }}
+              ></motion.div>
+
               {/* Profile Image */}
-              <div className="relative w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl ring-4 ring-[#677a1c]/20 dark:ring-[#f1e0bf]/20 group-hover:ring-[#677a1c]/40 dark:group-hover:ring-[#f1e0bf]/40 transition-all duration-300">
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 border-white dark:border-gray-900 shadow-2xl"
+                style={{
+                  boxShadow: `0 0 30px ${BRAND_COLOR}40, inset 0 0 20px ${BRAND_COLOR}20`
+                }}
+              >
                 <Image
-                  src={assets.profile_img}
-                  alt="Khoa Le"
+                  src={user_image}
+                  alt="Khoa Le Profile"
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="object-cover"
                   priority
                 />
-              </div>
+              </motion.div>
 
               {/* Status Badge */}
-              <div className="absolute bottom-2 right-2 bg-green-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg flex items-center gap-1.5 animate-pulse">
-                <span className="w-2 h-2 bg-white rounded-full"></span>
-                Available
-              </div>
-            </div>
-          </div>
-
-          {/* Greeting with Animation */}
-          <div className="flex items-center justify-center gap-3 mb-4 animate-fade-in-up">
-            <span className="text-gray-600 dark:text-gray-400 text-lg md:text-xl font-medium">
-              Hi! I'm <span className="text-[#677a1c] dark:text-[#f1e0bf] font-bold">Khoa Le</span>
-            </span>
-            <span className="text-3xl animate-wave">👋</span>
-          </div>
-
-          {/* Main Headline with Gradient */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in-up delay-100">
-            <span className="bg-gradient-to-r from-[#677a1c] via-[#92a344] to-[#677a1c] bg-clip-text text-transparent animate-gradient">
-              Full-Stack Developer
-            </span>
-            <div className="flex items-center justify-center gap-2 mt-2">
-              <Sparkles className="text-[#677a1c] dark:text-[#f1e0bf]" size={24} />
-              <span className="text-2xl md:text-3xl text-gray-700 dark:text-gray-300 font-normal">
-                Mobile & Web Specialist
-              </span>
-            </div>
-          </h1>
-
-          {/* Tech Stack Pills */}
-          <div className="flex flex-wrap justify-center gap-2 mb-6 animate-fade-in-up delay-200">
-            {['Flutter', 'React.js', 'ASP.NET', 'Node.js'].map((tech, idx) => (
-              <span
-                key={tech}
-                className="px-4 py-2 bg-white dark:bg-gray-800 border border-[#677a1c]/20 dark:border-[#f1e0bf]/20 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-[#677a1c] dark:hover:border-[#f1e0bf] transition-all duration-300 hover:scale-105"
-                style={{ animationDelay: `${idx * 100}ms` }}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute bottom-4 -right-2 text-white text-xs px-4 py-2.5 rounded-full font-bold shadow-lg flex items-center gap-1.5"
+                style={{
+                  background: `linear-gradient(135deg, ${BRAND_COLOR}, #92a344)`
+                }}
               >
-                {tech}
+                <motion.span
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="w-2 h-2 bg-white rounded-full"
+                ></motion.span>
+                Online
+              </motion.div>
+            </motion.div>
+          </motion.div>
+
+          {/* Greeting */}
+          <motion.div variants={itemVariants} className="space-y-4">
+            <div className="flex items-center justify-center gap-2 flex-wrap">
+              <span className="text-lg sm:text-xl font-semibold text-gray-700 dark:text-gray-300">
+                Xin chào! Tôi là
               </span>
+              <motion.span
+                animate={{ opacity: [1, 0.6, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-lg sm:text-xl font-black"
+                style={{ color: BRAND_COLOR }}
+              >
+                Khoa Lê
+              </motion.span>
+              <motion.span
+                animate={{ rotate: [0, 20, -20, 0] }}
+                transition={{ duration: 1, repeat: Infinity }}
+                className="text-2xl sm:text-3xl inline-block origin-[70%_70%]"
+              >
+                👋
+              </motion.span>
+            </div>
+
+            {/* Main Headline */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+            >
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight tracking-tight">
+                <motion.span
+                  animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                  className="block bg-gradient-to-r from-green-600 via-green-500 to-green-700 bg-clip-text text-transparent"
+                  style={{ backgroundSize: '200% 200%' }}
+                >
+                  Lập Trình Viên
+                </motion.span>
+                <span className="block mt-2" style={{ color: BRAND_COLOR }}>
+                  Full-Stack
+                </span>
+              </h1>
+            </motion.div>
+
+            {/* Subtitle */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="flex items-center justify-center gap-3 mt-6"
+            >
+              <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 4, repeat: Infinity }}>
+                <Sparkles style={{ color: BRAND_COLOR }} size={28} />
+              </motion.div>
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-800 dark:text-gray-200">
+                Chuyên Gia Mobile & Web
+              </h2>
+            </motion.div>
+          </motion.div>
+
+          {/* Tech Stack */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+            className="flex flex-wrap justify-center gap-2.5"
+          >
+            {techStack.map((tech, idx) => (
+              <motion.div
+                key={tech}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 + idx * 0.1, duration: 0.4 }}
+                whileHover={{ scale: 1.1, y: -4 }}
+              >
+                <div className="group relative">
+                  <div
+                    className="absolute inset-0 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: `linear-gradient(to right, ${BRAND_COLOR}/30, #92a344/30)`
+                    }}
+                  ></div>
+                  <span
+                    className="relative px-4 py-2.5 rounded-full text-xs sm:text-sm font-bold border transition-all duration-300 block group-hover:shadow-lg group-hover:border-opacity-100"
+                    style={{
+                      background: 'white',
+                      borderColor: `${BRAND_COLOR}40`,
+                      color: BRAND_COLOR
+                    }}
+                  >
+                    {tech}
+                  </span>
+                </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* Description */}
-          <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg mb-10 max-w-3xl mx-auto leading-relaxed animate-fade-in-up delay-300">
-            Sinh viên năm cuối ngành <span className="font-semibold text-[#677a1c] dark:text-[#f1e0bf]">Công nghệ Phần mềm</span> tại Đại học HUFLIT, 
-            đam mê và có kinh nghiệm phát triển <span className="font-semibold">Full-stack đa nền tảng</span>. 
-            Chuyên về phát triển ứng dụng di động/web với Flutter/Dart và React.js, 
-            đồng thời thành thạo xây dựng Backend bằng ASP.NET Core và Node.js/Express.
-          </p>
+          <motion.p
+            variants={itemVariants}
+            className="text-gray-700 dark:text-gray-300 text-base sm:text-lg lg:text-lg max-w-3xl mx-auto leading-relaxed font-medium"
+          >
+            Sinh viên năm cuối <span className="font-bold" style={{ color: BRAND_COLOR }}>Công Nghệ Phần Mềm</span> tại HUFLIT, 
+            với <span className="font-bold">1+ năm kinh nghiệm</span> xây dựng ứng dụng full-stack. 
+            Chuyên về <span className="font-bold" style={{ color: BRAND_COLOR }}>Flutter/React</span> phía frontend và 
+            <span className="font-bold" style={{ color: BRAND_COLOR }}> ASP.NET Core</span> phía backend.
+          </motion.p>
 
           {/* Stats */}
-          <div className="flex flex-wrap justify-center gap-8 mb-10 animate-fade-in-up delay-400">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9, duration: 0.6 }}
+            className="grid grid-cols-3 gap-4 sm:gap-6 mt-10"
+          >
             {stats.map((stat, idx) => (
-              <div key={idx} className="text-center group">
-                <div className="text-3xl md:text-4xl font-bold text-[#677a1c] dark:text-[#f1e0bf] mb-1 group-hover:scale-110 transition-transform">
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 + idx * 0.15, duration: 0.5 }}
+                whileHover={{ y: -8, scale: 1.05 }}
+                className="group p-5 sm:p-7 rounded-2xl border shadow-lg transition-all duration-300 text-center"
+                style={{
+                  background: 'white',
+                  borderColor: `${BRAND_COLOR}20`,
+                  boxShadow: `0 4px 20px ${BRAND_COLOR}10`
+                }}
+              >
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-black mb-2" style={{ color: BRAND_COLOR }}>
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                <div className="text-xs sm:text-sm font-bold text-gray-700 dark:text-gray-500">
                   {stat.label}
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in-up delay-500">
-            <Link
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3, duration: 0.5 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center mt-12"
+          >
+            <motion.a
               href="#contact"
-              className="group relative bg-gradient-to-r from-[#677a1c] to-[#92a344] text-white px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-2 shadow-lg shadow-[#677a1c]/30 hover:shadow-xl hover:shadow-[#677a1c]/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+              whileHover={{ scale: 1.08, y: -4 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <span className="relative z-10 flex items-center gap-2">
-                Connect with me
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#92a344] to-[#677a1c] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </Link>
+              <motion.button
+                className="relative px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-bold flex items-center justify-center gap-2 text-white shadow-xl transition-all duration-300 text-sm sm:text-base"
+                style={{
+                  background: `linear-gradient(135deg, ${BRAND_COLOR}, #92a344)`,
+                  boxShadow: `0 15px 35px -5px ${BRAND_COLOR}60`
+                }}
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Kết Nối Cùng Tôi
+                  <motion.div animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+                    <ArrowRight size={18} />
+                  </motion.div>
+                </span>
+              </motion.button>
+            </motion.a>
 
-            <button
+            <motion.button
               onClick={handleDownloadCV}
               disabled={isDownloading}
-              className="group relative border-2 border-[#677a1c] dark:border-[#f1e0bf] text-[#677a1c] dark:text-[#f1e0bf] px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-[#677a1c] hover:text-white dark:hover:bg-[#f1e0bf] dark:hover:text-gray-900 transition-all duration-300 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={{ scale: 1.08, y: -4 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-bold flex items-center justify-center gap-2 border-2 transition-all duration-300 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                borderColor: BRAND_COLOR,
+                color: BRAND_COLOR
+              }}
             >
               {isDownloading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                  Downloading...
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                    className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"
+                  ></motion.div>
+                  <span>Đang tải...</span>
                 </>
               ) : (
                 <>
-                  <Download size={18} className="group-hover:animate-bounce" />
-                  Download CV
+                  <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+                    <Download size={18} />
+                  </motion.div>
+                  <span>Tải CV</span>
                 </>
               )}
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
           {/* Social Links */}
-          <div className="flex justify-center gap-4 mb-12 animate-fade-in-up delay-600">
-            {socialLinks.map((social) => (
-              <a
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 0.5 }}
+            className="flex justify-center gap-4 mt-12"
+          >
+            {socialLinks.map((social, idx) => (
+              <motion.a
                 key={social.label}
                 href={social.href}
                 target={social.href.startsWith('http') ? '_blank' : undefined}
                 rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className={`group w-12 h-12 flex items-center justify-center rounded-full border-2 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400 transition-all duration-300 hover:scale-110 hover:shadow-lg ${social.color}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.6 + idx * 0.1, duration: 0.4 }}
+                whileHover={{ scale: 1.2, rotate: 10 }}
+                whileTap={{ scale: 0.9 }}
+                className={`group relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full border-2 border-gray-300 dark:border-gray-700 transition-all duration-300 ${social.color}`}
                 aria-label={social.label}
               >
-                <social.icon size={20} />
-              </a>
+                <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-300" style={{ background: 'currentColor' }}></div>
+                <social.icon size={22} className="relative z-10" />
+              </motion.a>
             ))}
-          </div>
+          </motion.div>
 
           {/* Scroll Indicator */}
-          <div className="flex flex-col items-center gap-2 animate-fade-in-up delay-700">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">
-              Scroll to explore
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2, duration: 0.5 }}
+            className="flex flex-col items-center gap-3 mt-16"
+          >
+            <span className="text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400">
+              Cuộn xuống để khám phá
             </span>
-            <div className="animate-bounce">
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
               <svg
-                className="w-6 h-6 text-[#677a1c] dark:text-[#f1e0bf]"
+                className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                style={{ color: BRAND_COLOR }}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
+                  strokeWidth={2.5}
                   d="M19 14l-7 7m0 0l-7-7m7 7V3"
                 />
               </svg>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
-
-      <style jsx>{`
-        @keyframes wave {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(20deg); }
-          75% { transform: rotate(-15deg); }
-        }
-        
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        .animate-wave {
-          animation: wave 2s ease-in-out infinite;
-          display: inline-block;
-          transform-origin: 70% 70%;
-        }
-        
-        .animate-gradient {
-          background-size: 200% auto;
-          animation: gradient 3s linear infinite;
-        }
-        
-        .animate-spin-slow {
-          animation: spin-slow 20s linear infinite;
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out forwards;
-        }
-        
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-          opacity: 0;
-        }
-        
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-        .delay-400 { animation-delay: 400ms; }
-        .delay-500 { animation-delay: 500ms; }
-        .delay-600 { animation-delay: 600ms; }
-        .delay-700 { animation-delay: 700ms; }
-        .delay-1000 { animation-delay: 1000ms; }
-        
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </section>
   );
 }

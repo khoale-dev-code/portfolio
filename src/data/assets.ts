@@ -34,8 +34,7 @@ import right_arrow from '../public/assets/right-arrow.png';
 import send_icon from '../public/assets/send-icon.png';
 import right_arrow_bold from '../public/assets/right-arrow-bold.png';
 import right_arrow_bold_dark from '../public/assets/right-arrow-bold-dark.png';
-import { Icon } from 'lucide-react';
-import web_icon from "../public/assets/web-icon.png"
+import web_icon from "../public/assets/web-icon.png";
 import work1 from '../public/images/work-1.png';
 import work2 from '../public/images/work-2.png';
 import work3 from '../public/images/work-3.png';
@@ -81,81 +80,57 @@ export const assets = {
     right_arrow_bold_dark
 };
 
-export const initialWorkData = [
-  {
-    title: 'Frontend project',
-    description: 'Web Design',
-    bgImage: work1,
-  },
-  {
-    title: 'Geo based app',
-    description: 'Mobile App',
-    bgImage: work2,
-  },
-  {
-    title: 'Photography site',
-    description: 'Web Design',
-    bgImage: work3,
-  },
-  {
-    title: 'UI/UX designing',
-    description: 'UI/UX Design',
-    bgImage: work4,
-  },
-];
-
- 
-// Services Data - Dựa trên kỹ năng trong CV
+// Services Data - Dựa trên kỹ năng trong CV mới nhất
 export const serviceData = [
     { 
         icon: assets.web_icon, 
         title: 'Web Development', 
-        description: 'Full-stack web development with React.js, ASP.NET Core, and modern frameworks. Specializing in responsive design and RESTful APIs.', 
+        description: 'Full-stack web development với React 18, ASP.NET Core, Tailwind CSS. Chuyên về responsive design, RESTful APIs và performance optimization (Lighthouse 95+).', 
         link: '' 
     },
     { 
         icon: assets.mobile_icon, 
         title: 'Mobile App Development', 
-        description: 'Cross-platform mobile applications using Flutter/Dart. Expertise in state management, UI/UX design, and Firebase integration.', 
+        description: 'Phát triển ứng dụng cross-platform với Flutter/Dart. Có kinh nghiệm với Firebase, state management, và UI/UX design tối ưu.', 
         link: '' 
     },
     { 
         icon: assets.ui_icon, 
         title: 'UI/UX Design', 
-        description: 'Creating seamless user experiences with responsive interfaces, smooth animations, and user-centered design principles.', 
+        description: 'Thiết kế giao diện người dùng thân thiện với Figma, tập trung vào accessibility và user experience. Responsive design cho mọi thiết bị.', 
         link: '' 
     },
     { 
         icon: assets.graphics_icon, 
-        title: 'Backend Development', 
-        description: 'Building secure and scalable backend systems with ASP.NET Core, Node.js, SQL Server, MongoDB, and JWT authentication.', 
+        title: 'Backend & Cloud', 
+        description: 'Xây dựng backend scalable với ASP.NET Core, Firebase, SQL Server. JWT authentication, role-based access control và cloud deployment với Vercel.', 
         link: '' 
     },
 ];
 
-// Info List - Thông tin cá nhân từ CV
+// Info List - Thông tin cá nhân từ CV mới nhất
 export const infoList = [
     { 
         icon: assets.code_icon, 
         iconDark: assets.code_icon_dark, 
-        title: 'Languages', 
-        description: 'Flutter/Dart, React.js, ASP.NET Core, JavaScript, C#, Java, HTML5/CSS3' 
+        title: 'Tech Stack', 
+        description: 'React 18, Flutter, ASP.NET Core, Firebase, Tailwind CSS, SQL Server, JavaScript (ES6+), C#, TypeScript' 
     },
     { 
         icon: assets.edu_icon, 
         iconDark: assets.edu_icon_dark, 
         title: 'Education', 
-        description: 'Software Engineering - HUFLIT University (GPA: 3.0/4.0, 2021-2025)' 
+        description: 'Công nghệ Phần mềm - Đại học HUFLIT (GPA: 3.0/4.0, 2021-2025)' 
     },
     { 
         icon: assets.project_icon, 
         iconDark: assets.project_icon_dark, 
-        title: 'Projects', 
-        description: 'Built 6+ full-stack projects including hotel booking, cinema ticketing, and mobile apps' 
+        title: 'Experience', 
+        description: '5+ dự án full-stack | 700+ users trên HUFLIT Test Practice | Thực tập tại GIS Việt' 
     }
 ];
 
-// Tools Data - Công cụ sử dụng
+// Tools Data - Công cụ và công nghệ sử dụng
 export const toolsData = [
     assets.vscode,
     assets.firebase,
@@ -164,159 +139,348 @@ export const toolsData = [
     assets.git
 ];
 
-// Work/Project Data - Dự án từ CV
+// Work/Project Data - DỰ ÁN CẬP NHẬT TỪ CV MỚI
 export const workData = [
+    {
+        title: 'HUFLIT Test Practice',
+        description: 'Nền tảng luyện thi Chuẩn Đầu Ra',
+        bgImage: work1,
+        tech: ['React 18', 'Firebase', 'Clerk Auth', 'Tailwind CSS', 'Vite'],
+        liveLink: 'https://huflit-test.vercel.app',
+        githubLink: 'https://github.com/khoale-dev-code/huflit-test',
+        date: '10/2024 - 12/2024',
+        status: 'Live',
+        highlights: [
+            '700+ người dùng hoạt động',
+            'Text-to-Speech API với giọng nam/nữ (0.5x-2.0x speed)',
+            'Auto-save & realtime sync với Firebase Firestore',
+            'Multi-auth: Google OAuth + Email (Clerk)',
+            'Lighthouse Score 95+, Load time <1.5s',
+            'Responsive hoàn hảo trên mọi thiết bị'
+        ]
+    },
     {
         title: 'Hotel Booking System',
         description: 'Full-Stack Web Application',
-        bgImage: work1,
-        tech: ['Flutter Web', 'ASP.NET Core', 'SQL Server', 'JWT'],
-        link: 'https://github.com/khoale-dev-code/Hotel-Booking-Frontend',
-        date: '2025',
+        bgImage: work2,
+        tech: ['Flutter Web', 'ASP.NET Core 8.0', 'SQL Server', 'JWT', 'Entity Framework'],
+        githubLink: 'https://github.com/khoale-dev-code/Hotel-Booking-Frontend',
+        backendLink: 'https://github.com/khoale-dev-code/HotelBooking-Backend',
+        date: '2025 - In Development',
+        status: 'In Progress',
         highlights: [
-            'Clean Architecture implementation',
-            'Multi-role authentication (Customer, Staff, Admin)',
-            'Support 500+ simulated users',
-            '30% scalability improvement'
+            'Frontend responsive với Flutter Web + Dart + Provider',
+            'Backend API an toàn với ASP.NET Core 8.0',
+            'Authentication & multi-role (Customer, Staff, Admin)',
+            'Quản lý phòng, đặt phòng, voucher',
+            'Admin dashboard cho quản lý toàn diện'
         ]
     },
     {
         title: 'Cinema Ticket Booking',
-        description: 'Web Application',
-        bgImage: work2,
-        tech: ['React.js', 'Tailwind CSS', 'YouTube API', 'Framer Motion'],
-        link: 'https://cinema-jade-xi.vercel.app',
+        description: 'Hệ Thống Đặt Vé Xem Phim',
+        bgImage: work3,
+        tech: ['React.js', 'Tailwind CSS', 'Vite', 'React Query', 'YouTube API v3'],
+        liveLink: 'https://cinemakhoale.vercel.app',
+        githubLink: 'https://github.com/khoale-dev-code/Cinema',
         date: '06/2025 - 08/2025',
+        status: 'Live',
         highlights: [
-            'Responsive seat selection system',
-            'YouTube trailer integration',
-            'Secure payment processing',
-            'Support 100+ simulated users'
+            'Giao diện responsive đẹp mắt',
+            'YouTube API integration cho trailer',
+            'Hệ thống chọn ghế interactive',
+            'Thanh toán an toàn',
+            'Cá nhân hóa: danh sách yêu thích, lịch sử đặt vé'
         ]
     },
     {
         title: 'SHAKE-Cafe App',
-        description: 'Mobile Application',
-            bgImage: work3,
-        tech: ['Flutter', 'Dart', 'Firebase', 'SQLite'],
-        link: 'https://github.com/khoale-dev-code/App-coffe-demo',
-        date: '06/05/2024 - 20/07/2024',
-        highlights: [
-            'Cross-platform coffee ordering app',
-            'Offline/online data synchronization',
-            'Smooth UX with animations',
-            'Support 100+ test orders'
-        ]
-    },
-    {
-        title: 'Moc Khang Sales App',
-        description: 'Mobile Application',
+        description: 'Coffee Ordering Mobile App',
         bgImage: work4,
         tech: ['Flutter', 'Dart', 'Firebase'],
-        link: 'https://github.com/khoale-dev-code/MocKhang_App',
-        date: '01/03/2024 - 01/04/2024',
+        githubLink: 'https://github.com/khoale-dev-code/App-coffe-demo',
+        youtubeLink: 'https://github.com/khoale-dev-code/App-coffe-demo',
+        date: '06/05/2024 - 20/07/2024',
+        status: 'Completed',
         highlights: [
-            'Real-time sales management',
-            'Clean architecture implementation',
-            'Support 50+ products',
-            'Firebase authentication'
+            'Cross-platform coffee ordering app',
+            'Lưu trữ dữ liệu cục bộ và đám mây',
+            'Hỗ trợ offline/online mode',
+            'Trải nghiệm người dùng mượt mà',
+            'Firebase Backend integration'
         ]
     },
     {
-        title: 'Daily Planner App',
-        description: 'Mobile Application',
+        title: 'Moc Khang Management App',
+        description: 'Sales Management Mobile App',
         bgImage: work1,
-        tech: ['Flutter', 'Dart', 'Bloc Pattern'],
-        link: 'https://github.com/khoale-dev-code/daily_planner',
-        date: '2024 - In Development',
+        tech: ['Flutter', 'Dart', 'Firebase'],
+        githubLink: 'https://github.com/khoale-dev-code/MocKhang_App',
+        youtubeLink: 'https://www.youtube.com/watch?v=NrEKbp99000&t',
+        date: '01/03/2024 - 01/04/2024',
+        status: 'Completed',
         highlights: [
-            'Daily planning with reminders',
-            'Data synchronization',
-            'Unit testing implementation',
-            'Bloc pattern for state management'
+            'Ứng dụng quản lý bán hàng realtime',
+            'Kết nối backend realtime',
+            'Authentication tích hợp',
+            'Lưu trữ dữ liệu đa dạng sản phẩm',
+            'Firebase Database sync'
         ]
     },
     {
-        title: 'API with Roles',
-        description: 'Backend API',
-        bgImage: '/work-6.png',
-        tech: ['ASP.NET Core', 'C#', 'JWT', 'Identity Framework'],
-        link: 'https://github.com/khoale-dev-code/ApiWithRoles',
-        date: '2024',
+        title: 'Grid Stylish E-Commerce',
+        description: 'Internship Project - GIS Việt',
+        bgImage: work2,
+        tech: ['Flutter', 'ASP.NET Core', 'SQL Server', 'Firebase', 'Figma'],
+        date: '09/2024 - 11/2024',
+        status: 'Production',
         highlights: [
-            'Role-based authorization',
-            'JWT authentication',
-            'Multi-user security',
-            'RESTful API design'
+            'Thực tập tại Công ty TNHH GIS Việt',
+            'Frontend: Flutter (UI responsive, cart, checkout)',
+            'Backend: ASP.NET Core APIs (auth, products, orders)',
+            'JWT auth & role-based access control',
+            'Firebase real-time features & cloud storage',
+            'Agile workflow, 100% tasks completed on time'
         ]
     }
 ];
 
-// Skills Data - Kỹ năng chuyên môn
+// Skills Data - Kỹ năng chuyên môn CẬP NHẬT
 export const skillsData = {
-    mobile: [
-        { name: 'Flutter/Dart', level: 90 },
-        { name: 'State Management', level: 85 },
-        { name: 'Java (Android)', level: 70 },
-        { name: 'UI/UX Design', level: 85 }
-    ],
-    web: [
-        { name: 'React.js', level: 85 },
-        { name: 'ASP.NET Core', level: 80 },
-        { name: 'HTML5/CSS3/JavaScript', level: 90 },
-        { name: 'Node.js/Express', level: 75 }
+    frontend: [
+        { name: 'React 18', level: 90, icon: '⚛️' },
+        { name: 'Flutter/Dart', level: 85, icon: '📱' },
+        { name: 'Tailwind CSS', level: 90, icon: '🎨' },
+        { name: 'HTML5/CSS3', level: 95, icon: '🌐' },
+        { name: 'JavaScript (ES6+)', level: 90, icon: '💛' },
+        { name: 'TypeScript', level: 80, icon: '🔷' }
     ],
     backend: [
-        { name: 'RESTful API', level: 85 },
-        { name: 'SQL/MySQL', level: 80 },
-        { name: 'MongoDB', level: 75 },
-        { name: 'Firebase', level: 85 },
-        { name: 'Spring Boot', level: 70 }
+        { name: 'ASP.NET Core', level: 85, icon: '🔵' },
+        { name: 'Firebase', level: 90, icon: '🔥' },
+        { name: 'SQL Server', level: 80, icon: '🗄️' },
+        { name: 'MongoDB', level: 75, icon: '🍃' },
+        { name: 'REST APIs', level: 85, icon: '🔌' },
+        { name: 'C#', level: 85, icon: '♯' }
     ],
     tools: [
-        { name: 'Git/GitHub', level: 90 },
-        { name: 'Unit Testing', level: 75 },
-        { name: 'OOP/SOLID', level: 85 },
-        { name: 'UML Diagrams', level: 80 }
+        { name: 'Git/GitHub', level: 90, icon: '🔀' },
+        { name: 'Vite', level: 85, icon: '⚡' },
+        { name: 'Figma', level: 80, icon: '🎨' },
+        { name: 'VS Code', level: 95, icon: '💻' },
+        { name: 'Vercel', level: 85, icon: '▲' },
+        { name: 'ESLint/Prettier', level: 85, icon: '✨' }
+    ],
+    other: [
+        { name: 'Responsive Design', level: 95, icon: '📱' },
+        { name: 'Performance Optimization', level: 90, icon: '🚀' },
+        { name: 'CI/CD', level: 80, icon: '🔄' },
+        { name: 'Agile', level: 85, icon: '🏃' },
+        { name: 'Testing (Vitest, Playwright)', level: 80, icon: '🧪' },
+        { name: 'Web Speech API', level: 85, icon: '🎤' }
     ]
 };
 
-// Personal Info - Thông tin liên hệ
+// Personal Info - Thông tin cá nhân CẬP NHẬT
 export const personalInfo = {
     name: 'Lê Trần Đăng Khoa',
-    title: 'Full-Stack Developer',
-    subtitle: 'Mobile & Web Development Specialist',
-    location: 'Gò Vấp, TP.Hồ Chí Minh',
-    email: 'Lekhoale30092003@gmail.com',
-    phone: '+84 383196830',
+    title: 'Thực Tập Sinh Development',
+    subtitle: 'Full-Stack Developer | Mobile & Web Development',
+    location: '546 Lê Văn Thọ, Gò Vấp, TP.HCM',
+    email: 'lekhoale30092003@gmail.com',
+    phone: '+84 383 968 30',
+    portfolio: 'https://khoale-portfolio.vercel.app',
     github: 'https://github.com/khoale-dev-code',
-    bio: 'Sinh viên năm cuối chuyên ngành Công nghệ Phần mềm tại Đại học Ngoại Ngữ - Tin Học TP.HCM (HUFLIT), đam mê phát triển ứng dụng di động và web với Flutter/Dart, ASP.NET và React.js. Có kinh nghiệm xây dựng UI/UX responsive, tích hợp API, và quản lý state trong các dự án cá nhân.',
-    experience: '0.5+ years',
+    linkedin: 'https://linkedin.com/in/khoale-dev',
+    bio: 'Sinh viên năm 4 ngành Công nghệ Phần mềm tại HUFLIT, đam mê phát triển ứng dụng web và mobile. Có kinh nghiệm với React 18, Flutter, ASP.NET Core, Firebase. Đã xây dựng HUFLIT Test Practice phục vụ 700+ người dùng. Thực tập tại GIS Việt, hoàn thành 100% tasks đúng deadline.',
+    experience: '1 year',
     projects: '6+',
+    users: '700+',
     gpa: '3.0/4.0',
     graduation: '2025',
-    languages: ['Tiếng Việt (Native)', 'English (TOEIC 450)']
+    languages: ['Tiếng Việt (Native)', 'English (Intermediate)']
 };
 
-// Soft Skills
+// Soft Skills - KỸ NĂNG MỀM CẬP NHẬT TỪ CV
 export const softSkills = [
-    'Tự giác và làm việc nhóm tốt',
-    'Tuân thủ deadline',
-    'Ham học hỏi công nghệ mới',
-    'Quản lý thời gian hiệu quả',
-    'Giao tiếp tốt',
-    'Tư duy phân tích'
+    {
+        skill: 'Tự chủ & Quản lý thời gian',
+        description: 'Hoàn thành dự án full-stack độc lập từ A-Z',
+        icon: '⏰'
+    },
+    {
+        skill: 'Làm việc nhóm',
+        description: 'Git collaboration, code review, tiếp nhận feedback tích cực',
+        icon: '👥'
+    },
+    {
+        skill: 'Problem Solving',
+        description: 'Debug phức tạp, tối ưu performance (Lighthouse 95+)',
+        icon: '🧩'
+    },
+    {
+        skill: 'Communication',
+        description: 'Documentation rõ ràng, giải thích technical cho non-tech users',
+        icon: '💬'
+    },
+    {
+        skill: 'Sáng tạo & UX Design',
+        description: 'Thiết kế UI/UX thân thiện, accessibility-focused',
+        icon: '🎨'
+    },
+    {
+        skill: 'Phân tích & Quyết định',
+        description: 'Data-driven approach, cân nhắc trade-offs',
+        icon: '📊'
+    },
+    {
+        skill: 'Học hỏi nhanh',
+        description: 'Tự học Firebase, Clerk, Web APIs trong thời gian ngắn',
+        icon: '🚀'
+    },
+    {
+        skill: 'Chú ý chi tiết',
+        description: 'Code quality cao, testing kỹ lưỡng, follow best practices',
+        icon: '🔍'
+    }
 ];
 
-// Career Goals
-export const careerGoals = [
-    'Phát triển full-stack với focus vào Flutter cho mobile/web',
-    'Đóng góp vào các dự án sáng tạo và hiệu quả',
-    'Áp dụng kiến thức OOP, SOLID vào môi trường chuyên nghiệp',
-    'Tạo ra sản phẩm chất lượng cao với trải nghiệm người dùng tốt'
+// Experience Timeline - KINH NGHIỆM THỰC TẬP
+export const experienceData = [
+    {
+        company: 'Công ty TNHH GIS Việt',
+        position: 'Thực Tập Sinh Development',
+        duration: '09/2024 - 11/2024',
+        location: 'TP. Hồ Chí Minh',
+        type: 'Internship',
+        project: 'Ứng Dụng E-Commerce "Grid Stylish"',
+        responsibilities: [
+            'Phát triển frontend với Flutter (UI responsive, product listing, cart, checkout)',
+            'Xây dựng backend APIs với ASP.NET Core (authentication, product management, orders)',
+            'Thiết kế database SQL Server, implement JWT auth và role-based access',
+            'Tích hợp Firebase cho real-time features và cloud storage',
+            'Làm việc theo Agile, Git collaboration, hoàn thành 100% tasks đúng deadline'
+        ],
+        technologies: ['Flutter', 'ASP.NET Core', 'SQL Server', 'Firebase', 'Figma', 'Git'],
+        achievements: [
+            'Hoàn thành 100% công việc được giao đúng deadline',
+            'Code được review và merge vào production',
+            'Học được quy trình Agile và Git workflow chuyên nghiệp'
+        ]
+    }
 ];
+
+// Education Data - HỌC VẤN
+export const educationData = {
+    university: 'Đại học Ngoại Ngữ - Tin Học TP.HCM (HUFLIT)',
+    major: 'Công nghệ Phần mềm',
+    degree: 'Cử nhân Kỹ thuật',
+    duration: '2021 - 2025 (Dự kiến tốt nghiệp)',
+    gpa: '3.0/4.0',
+    notableCourses: [
+        'Lập trình di động (Flutter)',
+        'Phát triển website ASP.NET Core',
+        'Cơ sở dữ liệu (SQL Server/MongoDB)',
+        'Web/App ReactJS',
+        'Figma UI/UX Design'
+    ]
+};
+
+// Career Goals - MỤC TIÊU NGHỀ NGHIỆP
+export const careerGoals = [
+    {
+        goal: 'Trở thành Full-Stack Developer giỏi',
+        description: 'Thành thạo cả Frontend (React, Flutter) và Backend (ASP.NET Core, Node.js)',
+        icon: '🎯'
+    },
+    {
+        goal: 'Đóng góp vào dự án có impact',
+        description: 'Xây dựng sản phẩm phục vụ hàng ngàn người dùng như HUFLIT Test Practice',
+        icon: '🚀'
+    },
+    {
+        goal: 'Học hỏi công nghệ mới',
+        description: 'Luôn cập nhật và áp dụng best practices, modern frameworks',
+        icon: '📚'
+    },
+    {
+        goal: 'Làm việc trong môi trường chuyên nghiệp',
+        description: 'Áp dụng Agile, code review, CI/CD trong quy trình phát triển',
+        icon: '💼'
+    }
+];
+
+// // Testimonials - ĐÁNH GIÁ (nếu có)
+// export const testimonials = [
+//     {
+//         name: 'Th.S Nguyễn Thị Xuân Thu',
+//         position: 'Giảng viên hướng dẫn',
+//         company: 'HUFLIT',
+//         feedback: 'Khoa là sinh viên chăm chỉ, có tinh thần học hỏi cao. Các dự án của em thể hiện khả năng tư duy logic và kỹ năng lập trình tốt.',
+//         rating: 5
+//     },
+//     {
+//         name: 'Technical Lead',
+//         position: 'Người hướng dẫn',
+//         company: 'GIS Việt',
+//         feedback: 'Khoa hoàn thành tốt các công việc được giao, có khả năng học hỏi nhanh và làm việc nhóm hiệu quả.',
+//         rating: 5
+//     }
+// ];
+
+// Achievements - THÀNH TÍCH
+export const achievements = [
+    {
+        title: '700+ Active Users',
+        description: 'HUFLIT Test Practice phục vụ 700+ sinh viên',
+        icon: '👥',
+        date: '2024'
+    },
+    {
+        title: 'Lighthouse Score 95+',
+        description: 'Performance optimization trên HUFLIT Test Practice',
+        icon: '⚡',
+        date: '2024'
+    },
+    {
+        title: '6+ Projects Completed',
+        description: 'Full-stack projects with modern tech stack',
+        icon: '🎯',
+        date: '2023-2024'
+    },
+    {
+        title: '100% Tasks On Time',
+        description: 'Hoàn thành đúng deadline tại GIS Việt',
+        icon: '✅',
+        date: '2024'
+    }
+];
+
+// Contact Info - THÔNG TIN LIÊN HỆ CHI TIẾT
+export const contactInfo = {
+    email: 'lekhoale30092003@gmail.com',
+    phone: '+84 383 968 30',
+    location: '546 Lê Văn Thọ, Gò Vấp, TP.HCM',
+    portfolio: 'https://khoale-portfolio.vercel.app',
+    github: 'https://github.com/khoale-dev-code',
+    linkedin: 'https://linkedin.com/in/khoale-dev',
+    availability: 'Available for full-time from 06/2025',
+    preferredRoles: ['Full-Stack Developer', 'Frontend Developer', 'Mobile Developer'],
+    workType: ['Full-time', 'Remote', 'Hybrid']
+};
+
+// Stats - THỐNG KÊ
+export const stats = {
+    experience: '1+',
+    projects: '6+',
+    technologies: '15+',
+    users: '700+',
+    commits: '500+',
+    hoursOfCoding: '1000+'
+};
 
 export default {
+    assets,
     serviceData,
     infoList,
     toolsData,
@@ -324,8 +488,11 @@ export default {
     skillsData,
     personalInfo,
     softSkills,
+    experienceData,
+    educationData,
     careerGoals,
-    assets
+    //testimonials,
+    achievements,
+    contactInfo,
+    stats
 };
-
- 
