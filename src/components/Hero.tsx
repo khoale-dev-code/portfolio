@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { ArrowRight, Download, Github, Mail, Linkedin, Sparkles, Code2, Zap, Rocket } from 'lucide-react';
+import { ArrowRight, Download, Github, Mail, Linkedin, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import user_image from '../public/assets/user-image.png';
 
 const BRAND_COLOR = '#677a1c';
-const BRAND_HOVER_COLOR = '#4a5b14';
+const BRAND_HOVER_COLOR = '#4a5b14'; // Không được sử dụng trong phiên bản này, nhưng giữ lại để tham khảo
 
 export default function Hero() {
   const [isDownloading, setIsDownloading] = useState(false);
@@ -85,7 +85,8 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 overflow-hidden"
+      // Tinh chỉnh padding và loại bỏ min-h-screen để kiểm soát bố cục tốt hơn
+      className="relative flex flex-col items-center justify-center py-20 sm:py-24 lg:py-32 px-4 sm:px-6 overflow-hidden" 
       style={{
         background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 50%, #f3f4f6 100%)',
         fontFamily: 'Inter, sans-serif'
@@ -129,11 +130,11 @@ export default function Hero() {
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="text-center space-y-8"
+          className="text-center" // <-- Loại bỏ space-y-8
         >
           
           {/* Badge - Available */}
-          <motion.div variants={itemVariants} className="inline-block">
+          <motion.div variants={itemVariants} className="inline-block mb-10"> {/* Thêm mb-10 */}
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-lg border shadow-lg"
@@ -154,7 +155,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Profile Image with Advanced Animations */}
-          <motion.div variants={itemVariants} className="flex justify-center">
+          <motion.div variants={itemVariants} className="flex justify-center mb-8"> {/* Thêm mb-8 */}
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="relative group"
@@ -199,11 +200,11 @@ export default function Hero() {
                 />
               </motion.div>
 
-              {/* Status Badge */}
+              {/* Status Badge - Đã điều chỉnh vị trí */}
               <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="absolute bottom-4 -right-2 text-white text-xs px-4 py-2.5 rounded-full font-bold shadow-lg flex items-center gap-1.5"
+                className="absolute bottom-4 -right-4 text-white text-xs px-4 py-2.5 rounded-full font-bold shadow-lg flex items-center gap-1.5"
                 style={{
                   background: `linear-gradient(135deg, ${BRAND_COLOR}, #92a344)`
                 }}
@@ -218,7 +219,7 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Greeting */}
+          {/* Greeting & Headline Group */}
           <motion.div variants={itemVariants} className="space-y-4">
             <div className="flex items-center justify-center gap-2 flex-wrap">
               <span className="text-lg sm:text-xl font-semibold text-gray-700 dark:text-gray-300">
@@ -267,13 +268,13 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
-              className="flex items-center justify-center gap-3 mt-6"
+              className="flex items-center justify-center gap-3 mt-6 mb-8" // Thêm mb-8
             >
               <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 4, repeat: Infinity }}>
                 <Sparkles style={{ color: BRAND_COLOR }} size={28} />
               </motion.div>
               <h2 className="text-2xl sm:text-3xl font-black text-gray-800 dark:text-gray-200">
-                Chuyên Gia Mobile & Web
+                Kỹ Sư Phát Triển Full-Stack Tiềm Năng
               </h2>
             </motion.div>
           </motion.div>
@@ -283,7 +284,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.6 }}
-            className="flex flex-wrap justify-center gap-2.5"
+            className="flex flex-wrap justify-center gap-2.5 mb-8" // Thêm mb-8
           >
             {techStack.map((tech, idx) => (
               <motion.div
@@ -315,10 +316,10 @@ export default function Hero() {
             ))}
           </motion.div>
 
-          {/* Description */}
+          {/* Description - Thêm mt-8 để phân tách rõ hơn */}
           <motion.p
             variants={itemVariants}
-            className="text-gray-700 dark:text-gray-300 text-base sm:text-lg lg:text-lg max-w-3xl mx-auto leading-relaxed font-medium"
+            className="text-gray-700 dark:text-gray-300 text-base sm:text-lg lg:text-lg max-w-3xl mx-auto leading-relaxed font-medium mt-8"
           >
             Sinh viên năm cuối <span className="font-bold" style={{ color: BRAND_COLOR }}>Công Nghệ Phần Mềm</span> tại HUFLIT, 
             với <span className="font-bold">1+ năm kinh nghiệm</span> xây dựng ứng dụng full-stack. 
@@ -326,7 +327,7 @@ export default function Hero() {
             <span className="font-bold" style={{ color: BRAND_COLOR }}> ASP.NET Core</span> phía backend.
           </motion.p>
 
-          {/* Stats */}
+          {/* Stats - Giữ nguyên mt-10 */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -357,7 +358,7 @@ export default function Hero() {
             ))}
           </motion.div>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons - Giữ nguyên mt-12 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -416,7 +417,7 @@ export default function Hero() {
             </motion.button>
           </motion.div>
 
-          {/* Social Links */}
+          {/* Social Links - Giữ nguyên mt-12 */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -443,7 +444,7 @@ export default function Hero() {
             ))}
           </motion.div>
 
-          {/* Scroll Indicator */}
+          {/* Scroll Indicator - Giữ nguyên mt-16 */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
